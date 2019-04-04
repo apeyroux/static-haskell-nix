@@ -677,6 +677,12 @@ let
           "--ghc-option=-lxcb --ghc-option=-lXau --ghc-option=-lXrender --ghc-option=-lXdmcp"
         ];
 
+      nuxeo-audit =
+        addStaticLinkerFlagsWithPkgconfig
+          (self.callCabal2nix "nuxeo-audit" /home/alex/src/nuxeo-audit {})
+          [ openssl_static ]
+          "--libs openssl";
+
       cryptonite =
         if integer-simple
           then disableCabalFlag super.cryptonite "integer-gmp"
