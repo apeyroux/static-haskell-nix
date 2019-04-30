@@ -683,6 +683,30 @@ let
           [ openssl_static ]
           "--libs openssl";
 
+      espurge =
+        addStaticLinkerFlagsWithPkgconfig
+          (self.callCabal2nix "espurge" /home/alex/src/espurge {})
+          [ openssl_static ]
+          "--libs openssl";
+
+      hbrightness =
+        addStaticLinkerFlagsWithPkgconfig
+          (self.callCabal2nix "hbrightness" /home/alex/src/hbrightness {})
+          [ openssl_static ]
+          "--libs openssl";
+
+      regard =
+        addStaticLinkerFlagsWithPkgconfig
+          (self.callCabal2nix "regard" /home/alex/src/regard {})
+          [ openssl_static ]
+          "--libs openssl";
+
+      osmand =
+        addStaticLinkerFlagsWithPkgconfig
+          (self.callCabal2nix "osmand" /home/alex/src/osmand {})
+          [ openssl_static ]
+          "--libs openssl";
+
       cryptonite =
         if integer-simple
           then disableCabalFlag super.cryptonite "integer-gmp"
