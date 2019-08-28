@@ -1095,41 +1095,34 @@ let
                   then dontCheck super.x509-validation
                   else super.x509-validation;
 
-
-
                #
                # packages px
                #
-               nuxeo-audit =
-               addStaticLinkerFlagsWithPkgconfig
-               (self.callCabal2nix "nuxeo-audit" /home/alex/src/nuxeo-audit {})
-               [ openssl_static ]
-               "--libs openssl";
+               nuxeo-audit = self.callCabal2nix "nuxeo-audit" /home/alex/src/nuxeo-audit {};
 
                espurge =
                addStaticLinkerFlagsWithPkgconfig
                (self.callCabal2nix "espurge" /home/alex/src/espurge {})
-               [ openssl_static ]
+               [ final.openssl ]
                "--libs openssl";
 
                hbrightness =
                addStaticLinkerFlagsWithPkgconfig
                (self.callCabal2nix "hbrightness" /home/alex/src/hbrightness {})
-               [ openssl_static ]
+               [ final.openssl ]
                "--libs openssl";
 
                regard =
                addStaticLinkerFlagsWithPkgconfig
                (self.callCabal2nix "regard" /home/alex/src/regard {})
-               [ openssl_static ]
+               [ final.openssl ]
                "--libs openssl";
 
                osmand =
                addStaticLinkerFlagsWithPkgconfig
                (self.callCabal2nix "osmand" /home/alex/src/osmand {})
-               [ openssl_static ]
+               [ final.openssl ]
                "--libs openssl";
-
                #
                # end packages px
                #
