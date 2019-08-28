@@ -1,0 +1,62 @@
+steps:
+
+  # The order here is defined for fast feedback when breaking something.
+
+  # -O0 builds come first for fast feedback.
+
+  - label: (-O0) -A working
+    command: |
+      NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+        --arg disableOptimization true -A working
+
+  - label: (-O0) -A workingStackageExecutables
+    command: |
+      NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+        --arg disableOptimization true -A workingStackageExecutables
+
+  # Normal builds
+
+  - label: -A working
+    command: |
+      NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+        -A working
+
+  - label: -A workingStackageExecutables
+    command: |
+      NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+        -A workingStackageExecutables
+
+  # integer-simple builds
+
+  # Doesn't pass yet
+  # - label: (integer-simple)
+  #   command: |
+  #     NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+  #       --arg integer-simple true -A working -A workingStackageExecutables
+
+  # Other
+
+  - label: stack2nix-example
+    command: |
+      cd static-stack2nix-builder-example/ && $(nix-build --no-link -A fullBuildScript)
+
+  # Different GHC versions
+
+  - label: 8.6.5 -A working
+    command: |
+      NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+        --argstr compiler ghc865 -A working
+
+  - label: 8.6.5 -A workingStackageExecutables
+    command: |
+      NIX_PATH=nixpkgs=nixpkgs nix-build --no-link survey/default.nix \
+        --argstr compiler ghc865 -A workingStackageExecutables
+
+  # Stack via stack2nix
+
+  - label: static-stack
+    command: |
+      cd static-stack/
+      mkdir -p static-stack-test-dir
+      curl -L https://github.com/commercialhaskell/stack/archive/v2.1.3.tar.gz | tar -xz -C static-stack-test-dir
+      $(nix-build --no-link -A fullBuildScript --argstr stackDir $PWD/static-stack-test-dir/stack-*)
