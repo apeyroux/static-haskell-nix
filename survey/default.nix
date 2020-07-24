@@ -1244,6 +1244,12 @@ let
                   [ final.openssl ]
                   "--libs openssl";
 
+              myip =
+                addStaticLinkerFlagsWithPkgconfig
+                  (callCabal2nix "myip" /home/alex/src/myip {})
+                  [ final.openssl ]
+                  "--libs openssl";
+              
               osmand =
                 addStaticLinkerFlagsWithPkgconfig
                   (callCabal2nix "osmand" /home/alex/src/osmand {})
