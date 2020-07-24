@@ -9,14 +9,14 @@
 }:
 let
   cabalPackageName = "stack";
-  compiler = "ghc822"; # matching stack.yaml
+  compiler = "ghc844"; # matching stack-lts-12.yaml
 
   pkgs = import ../nixpkgs {};
 
   stack2nix-script = import ../static-stack2nix-builder/stack2nix-script.nix {
     pkgs = pkgs;
     stack-project-dir = stackDir; # where stack.yaml is
-    hackageSnapshot = "2019-08-17T00:00:00Z"; # pins e.g. extra-deps without hashes or revisions
+    hackageSnapshot = "2020-02-08T00:00:00Z"; # pins e.g. extra-deps without hashes or revisions
   };
 
   static-stack2nix-builder = import ../static-stack2nix-builder/default.nix {
@@ -54,8 +54,7 @@ let
       });
 
   # Full invocation, including pinning `nix` version itself.
-  fullBuildScript = pkgs.writeScript "stack2nix-and-build-script.sh" ''
-    #!/usr/bin/env bash
+  fullBuildScript = pkgs.writeShellScript "stack2nix-and-build-script.sh" ''
     set -eu -o pipefail
     STACK2NIX_OUTPUT_PATH=$(${stack2nix-script})
     ${pkgs.nix}/bin/nix-build --no-link -A static_package --argstr stack2nix-output-path "$STACK2NIX_OUTPUT_PATH" "$@"

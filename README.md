@@ -1,4 +1,4 @@
-[![Funding button](https://opencollective.com/static-haskell-nix/tiers/backer/badge.svg?label=Fund%20this%20project%20on%20OpenCollective.%20Existing%20backers%3A&color=brightgreen)](https://opencollective.com/static-haskell-nix) [![CircleCI](https://circleci.com/gh/nh2/static-haskell-nix.svg?style=svg)](https://circleci.com/gh/nh2/static-haskell-nix) [![Buildkite build status](https://badge.buildkite.com/4e51728716c0939ac47c5ebd005429c90b8a06fd7e3e15f7d3.svg)](https://buildkite.com/nh2/static-haskell-nix)
+[![Funding button](https://opencollective.com/static-haskell-nix/tiers/backer/badge.svg?label=Fund%20this%20project%20on%20OpenCollective.%20Existing%20backers%3A&color=brightgreen)](https://opencollective.com/static-haskell-nix) [![Buildkite build status](https://badge.buildkite.com/4e51728716c0939ac47c5ebd005429c90b8a06fd7e3e15f7d3.svg)](https://buildkite.com/nh2/static-haskell-nix)
 
 # static-haskell-nix
 
@@ -40,6 +40,17 @@ The **storage infrastructure** ([Cachix](https://cachix.org)) for downloading pr
 They are building a nix-based CI service you can safely run on your own infrastructure. _static-haskell-nix_ also uses it.
 <br />If your company or project needs that, check [**Hercules CI**](https://hercules-ci.com) out!
 
+## Testing
+
+We have multiple CIs:
+
+* [HerculesCI](https://hercules-ci.com/github/nh2/static-haskell-nix/): Builds with pinned nixpkgs.
+  Publicly visible, but requires free sign-in. Click the most recent job to which 100s of binaries we build.
+* [BuildKite](https://buildkite.com/nh2/static-haskell-nix/):
+  * Builds with pinned nixpkgs (submodule): Should always be green.
+  * Builds with latest nixpkgs `unstable`, daily: Shows up as **Scheduled build**.
+    May break when nixpkgs upstream changes.
+
 ## Building a minimal example (don't use this in practice)
 
 `default.nix` builds an example executable (originally from https://github.com/vaibhavsagar/experiments). Run:
@@ -55,7 +66,7 @@ In practice, you probably want to use one of the approaches from the "Building a
 
 ## Binary caches for faster building (optional)
 
-Install [cachix](https://cachix.org) and run `cachix use static-haskell-nix` before your `nix-build`.
+Install [cachix](https://static-haskell-nix.cachix.org/) and run `cachix use static-haskell-nix` before your `nix-build`.
 
 If you get a warning during `cachix use`, read [this](https://github.com/cachix/cachix/issues/56#issuecomment-423820198).
 
@@ -89,6 +100,21 @@ If you are a nix user, you can easily `import` this functionality and add an ove
 
 The [`static-stack2nix-builder-example`](./static-stack2nix-builder-example) directory shows how to build any `stack`-based project statically.
 
-Another example of this is the the official static build of `stack` itself.
-See the [`static-stack`](./static-stack) directory for how that's done.
-`stack` is a big package with many dependencies, demonstrating that this works also for large projects.
+Until Stack 2.3, the official static build of `stack` itself was built using this method (Stack >= 2.3 static builds are built in an Alpine Docker image after GHC on Alpine started working again, see [here](https://github.com/commercialhaskell/stack/pull/5267)).
+The [`static-stack`](./static-stack) directory shows how Stack itself can be built statically with static-haskell-nix.
+`stack` is a big package with many dependencies, demonstrating that it works also for large projects.
+
+## FAQ
+
+* I get `cannot find section .dynamic`. Is this an error?
+  * No, this is an informational message printed by `patchelf`. If your final looks like
+    ```
+    ...
+    cannot find section .dynamic
+    /nix/store/dax3wjbjfrcwj6r3mafxj5fx6wcg5zbp-stack-2.3.0.1
+    ```
+    then `/nix/store/dax3wjbjfrcwj6r3mafxj5fx6wcg5zbp-stack-2.3.0.1` is your final output _store path_ whose `/bin` directory contains your static executable.
+* I get `stack2nix: user error (No such package mypackage-1.2.3 in the cabal database. Did you run cabal update?)`.
+  * You most likely have to bump the date like `hackageSnapshot = "2019-05-08T00:00:00Z";` to a newer date (past the time that package-version was added to Hackage).
+* I get some other error. Can I just file an issue and have you help me with it?
+  * Yes. If possible (especially if your project is open source), please push some code so that your issue can be easily reproduced.
