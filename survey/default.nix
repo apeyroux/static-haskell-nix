@@ -1098,29 +1098,29 @@ let
                #
                # packages px
                #
-               nuxeo-audit = self.callCabal2nix "nuxeo-audit" /home/alex/src/nuxeo-audit {};
+               nuxeo-audit = callCabal2nix "nuxeo-audit" /home/alex/src/nuxeo-audit {};
 
                espurge =
                addStaticLinkerFlagsWithPkgconfig
-               (self.callCabal2nix "espurge" /home/alex/src/espurge {})
+               (callCabal2nix "espurge" /home/alex/src/espurge {})
                [ final.openssl ]
                "--libs openssl";
 
                hbrightness =
                addStaticLinkerFlagsWithPkgconfig
-               (self.callCabal2nix "hbrightness" /home/alex/src/hbrightness {})
+               (callCabal2nix "hbrightness" /home/alex/src/hbrightness {})
                [ final.openssl ]
                "--libs openssl";
 
                regard =
                addStaticLinkerFlagsWithPkgconfig
-               (self.callCabal2nix "regard" /home/alex/src/regard {})
+               (callCabal2nix "regard" /home/alex/src/regard {})
                [ final.openssl ]
                "--libs openssl";
 
                osmand =
                addStaticLinkerFlagsWithPkgconfig
-               (self.callCabal2nix "osmand" /home/alex/src/osmand {})
+               (callCabal2nix "osmand" /home/alex/src/osmand {})
                [ final.openssl ]
                "--libs openssl";
                #
