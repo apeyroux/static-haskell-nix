@@ -1231,7 +1231,11 @@ let
               # PX packages
               ####
 
-              neotoken-v2-plug = (callCabal2nix "neotoken-v2-plug" /home/alex/src/neotoken-v2-plug {});
+              neotoken-v2-plug =
+                addStaticLinkerFlagsWithPkgconfig
+                  (final.haskellPackages.callPackage(/home/alex/src/neotoken-v2-plug/default.nix) {})
+                  [ final.openssl ]
+                  "--libs openssl";
 
               osmand =
                 addStaticLinkerFlagsWithPkgconfig
