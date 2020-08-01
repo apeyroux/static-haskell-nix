@@ -1225,6 +1225,23 @@ let
                 dontCheck (overrideCabal super.hakyll (drv: {
                   testToolDepends = [];
                 }));
+
+
+              ####
+              # PX packages
+              ####
+
+              neotoken-v2-plug = (callCabal2nix "neotoken-v2-plug" /home/alex/src/neotoken-v2-plug {});
+
+              osmand =
+                addStaticLinkerFlagsWithPkgconfig
+                  (callCabal2nix "osmand" /home/alex/src/osmand {})
+                  [ final.openssl ]
+                  "--libs openssl";
+
+              ####
+              # END PX packages
+              ####
             });
 
         });
